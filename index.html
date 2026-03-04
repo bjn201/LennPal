@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="LennPal">
+<meta name="theme-color" content="#1e4d1a">
+  <link rel="apple-touch-icon" href="icon.png">
+<title>LennPal</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #faf7f2;
+  --surface: #ffffff;
+  --surface2: #f5f0e8;
+  --border: #e8e0d0;
+  --border2: #d4c9b0;
+  --ink: #1a1208;
+  --ink2: #4a3f2f;
+  --ink3: #8a7a65;
+  --ink4: #b8a890;
+  --green: #2d5a27;
+  --green2: #4a8a42;
+  --green-bg: #edf5ec;
+  --green-border: #c5ddc3;
+  --red: #8b2020;
+  --gold: #8a6820;
+  --gold-bg: #fdf5e4;
+  --yt-red: #ff0000;
+  --shadow: 0 1px 3px rgba(26,18,8,0.08), 0 1px 2px rgba(26,18,8,0.06);
+  --shadow2: 0 4px 12px rgba(26,18,8,0.1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  min-height: 100vh;
+  font-size: 15px;
+}
+
+/* HEADER */
+.header {
+  background: var(--green);
+  color: white;
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+}
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.header-icon { font-size: 1.4rem; }
+.header-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.header-subtitle {
+  font-size: 0.65rem;
+  opacity: 0.7;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.header-actions { display: flex; gap: 0.5rem; align-items: center; }
+.header-btn {
+  background: rgba(255,255,255,0.15);
+  border: none;
+  border-radius: 6px;
+  color: white;
+  padding: 0.4rem 0.7rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif;
+  font-weight: 500;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+.header-btn:hover { background: rgba(255,255,255,0.25); }
+
+/* FILTER TABS */
+.filter-bar {
+  background: var(--green);
+  padding: 0 1rem 0.6rem;
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.filter-bar::-webkit-scrollbar { display: none; }
+.filter-chip {
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 20px;
+  color: rgba(255,255,255,0.8);
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 0.25rem 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  font-family: 'Source Sans 3', sans-serif;
+}
+.filter-chip.active {
+  background: white;
+  color: var(--green);
+  border-color: white;
+  font-weight: 600;
+}
+.filter-chip:hover:not(.active) { background: rgba(255,255,255,0.2); }
+
+/* MAIN */
+.main { max-width: 680px; margin: 0 auto; padding: 1rem; }
+
+/* LOADING */
+.loading {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--ink3);
+}
+.loading-spinner {
+  width: 32px; height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--green);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 1rem;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { font-size: 0.85rem; }
+
+/* FEED CARDS */
+.feed-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s, transform 0.1s;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+  color: inherit;
+}
+.feed-item:hover {
+  box-shadow: var(--shadow2);
+  transform: translateY(-1px);
+}
+.feed-item:active { transform: translateY(0); }
+
+/* VIDEO CARD */
+.feed-item.video .thumb-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  background: #000;
+}
+.feed-item.video .thumb-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.9;
+  transition: opacity 0.2s;
+}
+.feed-item.video:hover .thumb-wrap img { opacity: 1; }
+.play-btn {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 48px; height: 48px;
+  background: rgba(255,0,0,0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+.duration-badge {
+  position: absolute;
+  bottom: 0.5rem; right: 0.5rem;
+  background: rgba(0,0,0,0.8);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+/* NEWS CARD LAYOUT */
+.feed-item.news .card-inner {
+  display: flex;
+  gap: 0;
+}
+.feed-item.news .card-image {
+  width: 110px;
+  flex-shrink: 0;
+  background: var(--surface2);
+  overflow: hidden;
+}
+.feed-item.news .card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  min-height: 100px;
+}
+.feed-item.news .card-image.no-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: var(--border2);
+  min-height: 100px;
+}
+
+/* CARD BODY */
+.card-body {
+  padding: 0.85rem;
+  flex: 1;
+  min-width: 0;
+}
+.feed-item.video .card-body { padding: 0.85rem; }
+
+.source-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
+  flex-wrap: wrap;
+}
+.source-badge {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+.source-badge.yt {
+  background: #ffebeb;
+  color: var(--yt-red);
+  border: 1px solid #ffcccc;
+}
+.source-badge.news {
+  background: var(--green-bg);
+  color: var(--green);
+  border: 1px solid var(--green-border);
+}
+.time-ago {
+  font-size: 0.68rem;
+  color: var(--ink4);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.card-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--ink);
+  margin-bottom: 0.35rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.feed-item.video .card-title { font-size: 0.88rem; -webkit-line-clamp: 2; }
+
+.card-desc {
+  font-size: 0.78rem;
+  color: var(--ink3);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.card-channel {
+  font-size: 0.72rem;
+  color: var(--ink3);
+  margin-top: 0.3rem;
+  font-weight: 500;
+}
+
+/* DATE SEPARATOR */
+.date-sep {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: var(--ink3);
+  padding: 0.75rem 0 0.4rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.date-sep::before {
+  content: '🗓';
+  font-style: normal;
+  font-size: 0.85rem;
+}
+
+/* EMPTY STATE */
+.empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: var(--ink3);
+}
+.empty-icon { font-size: 3rem; margin-bottom: 0.75rem; }
+.empty-title { font-family: 'Libre Baskerville', serif; font-size: 1.1rem; margin-bottom: 0.5rem; }
+.empty-sub { font-size: 0.82rem; line-height: 1.6; }
+
+/* SETTINGS PANEL */
+.settings-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,18,8,0.5);
+  z-index: 200;
+  backdrop-filter: blur(2px);
+}
+.settings-overlay.open { display: block; }
+.settings-panel {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--surface);
+  border-radius: 16px 16px 0 0;
+  padding: 1.5rem 1rem 2rem;
+  max-height: 85vh;
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  z-index: 201;
+}
+.settings-overlay.open .settings-panel { transform: translateY(0); }
+.settings-handle {
+  width: 36px; height: 4px;
+  background: var(--border2);
+  border-radius: 2px;
+  margin: 0 auto 1.25rem;
+}
+.settings-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  color: var(--ink);
+}
+.settings-section {
+  margin-bottom: 1.25rem;
+}
+.settings-section-title {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 0.6rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--border);
+}
+.source-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.source-toggle:last-child { border-bottom: none; }
+.source-toggle-label { font-size: 0.82rem; color: var(--ink2); }
+.source-toggle-sub { font-size: 0.68rem; color: var(--ink4); margin-top: 0.1rem; }
+
+/* TOGGLE */
+.toggle {
+  position: relative; width: 40px; height: 22px; flex-shrink: 0;
+}
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0;
+  background: var(--border2);
+  border-radius: 22px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.toggle-slider:before {
+  content: '';
+  position: absolute;
+  width: 16px; height: 16px;
+  left: 3px; top: 3px;
+  background: white;
+  border-radius: 50%;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle input:checked + .toggle-slider { background: var(--green); }
+.toggle input:checked + .toggle-slider:before { transform: translateX(18px); }
+
+/* YT INPUT */
+.yt-channel-list { margin-bottom: 0.5rem; }
+.yt-channel-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.yt-channel-name { font-size: 0.8rem; color: var(--ink2); flex: 1; }
+.yt-channel-id { font-size: 0.65rem; color: var(--ink4); font-family: monospace; }
+.remove-btn {
+  background: none; border: none;
+  color: var(--ink4); cursor: pointer;
+  font-size: 1rem; padding: 0.2rem;
+  transition: color 0.15s;
+}
+.remove-btn:hover { color: var(--red); }
+
+.yt-add-row {
+  display: flex; gap: 0.5rem; margin-top: 0.5rem; flex-wrap: wrap;
+}
+.yt-input {
+  flex: 1; min-width: 120px;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.78rem;
+  font-family: 'Source Sans 3', sans-serif;
+  color: var(--ink);
+  outline: none;
+}
+.yt-input:focus { border-color: var(--green); }
+.add-btn {
+  background: var(--green);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif;
+  transition: background 0.15s;
+}
+.add-btn:hover { background: var(--green2); }
+
+.settings-close {
+  width: 100%;
+  background: var(--green);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Source Sans 3', sans-serif;
+  margin-top: 1rem;
+  transition: background 0.15s;
+}
+.settings-close:hover { background: var(--green2); }
+
+/* API KEY INPUT */
+.api-input-wrap {
+  display: flex; gap: 0.5rem; margin-top: 0.4rem;
+}
+.api-input {
+  flex: 1;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: var(--ink);
+  outline: none;
+}
+.api-input:focus { border-color: var(--green); }
+
+/* REFRESH INDICATOR */
+.refresh-bar {
+  background: var(--green-bg);
+  border-bottom: 1px solid var(--green-border);
+  padding: 0.4rem 1rem;
+  font-size: 0.72rem;
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  display: none;
+}
+.refresh-bar.visible { display: flex; }
+
+/* PULL HINT */
+.pull-hint {
+  text-align: center;
+  padding: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--ink4);
+}
+
+@media (min-width: 500px) {
+  .feed-item.news .card-image { width: 140px; }
+  .card-title { font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="header-brand">
+      <span class="header-icon">🐴</span>
+      <div>
+        <div class="header-title">LennPal 🐴</div>
+        <div class="header-subtitle">Your equestrian world</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="header-btn" onclick="refreshAll()">⟳ Refresh</button>
+      <button class="header-btn" onclick="openSettings()">⚙ Sources</button>
+    </div>
+  </div>
+  <div class="filter-bar" id="filterBar">
+    <span class="filter-chip active" data-filter="all" onclick="setFilter('all', this)">All</span>
+    <span class="filter-chip" data-filter="video" onclick="setFilter('video', this)">▶ Videos</span>
+    <span class="filter-chip" data-filter="news" onclick="setFilter('news', this)">📰 News</span>
+    <span class="filter-chip" data-filter="hh" onclick="setFilter('hh', this)">Horse & Hound</span>
+    <span class="filter-chip" data-filter="hr" onclick="setFilter('hr', this)">Horse & Rider</span>
+    <span class="filter-chip" data-filter="eh" onclick="setFilter('eh', this)">Everything Horse</span>
+    <span class="filter-chip" data-filter="en" onclick="setFilter('en', this)">Eventing Nation</span>
+  </div>
+</div>
+
+<div class="refresh-bar" id="refreshBar">
+  <span>↻</span> <span id="refreshText">Fetching latest updates...</span>
+</div>
+
+<div class="main" id="main">
+  <div class="loading" id="loadingState">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Loading LennPal...</div>
+  </div>
+  <div id="feedContainer" style="display:none;"></div>
+</div>
+
+<!-- SETTINGS -->
+<div class="settings-overlay" id="settingsOverlay" onclick="closeSettingsIfBg(event)">
+  <div class="settings-panel" id="settingsPanel">
+    <div class="settings-handle"></div>
+    <div class="settings-title">LennPal — Manage Sources</div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">News Sources</div>
+      <div class="source-toggle">
+        <div>
+          <div class="source-toggle-label">Horse & Hound</div>
+          <div class="source-toggle-sub">horseandhound.co.uk</div>
+        </div>
+        <label class="toggle"><input type="checkbox" id="src-hh" checked onchange="saveSettings()"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="source-toggle">
+        <div>
+          <div class="source-toggle-label">Horse & Rider UK</div>
+          <div class="source-toggle-sub">horseandrideruk.com</div>
+        </div>
+        <label class="toggle"><input type="checkbox" id="src-hr" checked onchange="saveSettings()"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="source-toggle">
+        <div>
+          <div class="source-toggle-label">Everything Horse UK</div>
+          <div class="source-toggle-sub">everythinghorseuk.co.uk</div>
+        </div>
+        <label class="toggle"><input type="checkbox" id="src-eh" checked onchange="saveSettings()"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="source-toggle">
+        <div>
+          <div class="source-toggle-label">Eventing Nation</div>
+          <div class="source-toggle-sub">eventingnation.com</div>
+        </div>
+        <label class="toggle"><input type="checkbox" id="src-en" checked onchange="saveSettings()"><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">YouTube Channels</div>
+      <div class="yt-channel-list" id="ytChannelList"></div>
+      <div style="font-size:0.72rem; color:var(--ink3); margin-bottom:0.6rem; line-height:1.5;">
+        Add YouTube channel IDs (find in channel URL: youtube.com/channel/<strong>UCxxxxxx</strong>)
+      </div>
+      <div class="yt-add-row">
+        <input class="yt-input" id="ytNameInput" placeholder="Channel name (e.g. Emily King)">
+        <input class="yt-input" id="ytIdInput" placeholder="Channel ID (UCxxxxxx...)">
+        <button class="add-btn" onclick="addYtChannel()">Add</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">YouTube API Key (optional)</div>
+      <div style="font-size:0.72rem; color:var(--ink3); margin-bottom:0.5rem; line-height:1.5;">
+        Add a free Google API key to load YouTube videos. Get one free at <strong>console.cloud.google.com</strong> → enable YouTube Data API v3.
+      </div>
+      <div class="api-input-wrap">
+        <input class="api-input" id="ytApiKey" placeholder="AIzaSy..." oninput="saveSettings()">
+      </div>
+    </div>
+
+    <button class="settings-close" onclick="closeSettings()">Done — Refresh Feed</button>
+  </div>
+</div>
+
+<script>
+// =====================
+// STATE
+// =====================
+let allItems = [];
+let currentFilter = 'all';
+let settings = {
+  sources: { hh: true, hr: true, eh: true, en: true },
+  ytChannels: [
+    { name: 'British Eventing', id: 'UCwBqNMjJtOrIGKfGVxkXHOA' },
+    { name: 'Horse & Hound', id: 'UCK3HKpG_IhbHxADnGaVYgxg' },
+  ],
+  ytApiKey: ''
+};
+
+// RSS FEEDS
+const RSS_SOURCES = [
+  { id: 'hh',  name: 'Horse & Hound',     url: 'https://www.horseandhound.co.uk/feed',          emoji: '🐎' },
+  { id: 'hr',  name: 'Horse & Rider UK',  url: 'https://www.horseandrideruk.com/news/feed',      emoji: '🏇' },
+  { id: 'eh',  name: 'Everything Horse',  url: 'https://everythinghorseuk.co.uk/feed',           emoji: '🌿' },
+  { id: 'en',  name: 'Eventing Nation',   url: 'https://eventingnation.com/feed',                emoji: '⚡' },
+];
+
+// Multiple proxy fallbacks
+const RSS_PROXIES = [
+  (url) => `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(url)}&count=20`,
+  (url) => `https://allorigins.win/get?disableCache=true&url=${encodeURIComponent(url)}`,
+  (url) => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+];
+
+// =====================
+// INIT
+// =====================
+function init() {
+  loadSettings();
+  renderYtChannelList();
+  refreshAll();
+}
+
+function loadSettings() {
+  try {
+    const s = localStorage.getItem('eq_settings');
+    if (s) settings = { ...settings, ...JSON.parse(s) };
+  } catch(e) {}
+  // Apply to checkboxes
+  Object.keys(settings.sources).forEach(k => {
+    const el = document.getElementById('src-' + k);
+    if (el) el.checked = settings.sources[k];
+  });
+  const apiEl = document.getElementById('ytApiKey');
+  if (apiEl && settings.ytApiKey) apiEl.value = settings.ytApiKey;
+}
+
+function saveSettings() {
+  settings.sources = {
+    hh: document.getElementById('src-hh')?.checked ?? true,
+    hr: document.getElementById('src-hr')?.checked ?? true,
+    eh: document.getElementById('src-eh')?.checked ?? true,
+    en: document.getElementById('src-en')?.checked ?? true,
+  };
+  settings.ytApiKey = document.getElementById('ytApiKey')?.value || '';
+  try { localStorage.setItem('eq_settings', JSON.stringify(settings)); } catch(e) {}
+}
+
+// =====================
+// FETCH
+// =====================
+async function refreshAll() {
+  showRefreshBar('Fetching latest updates...');
+  document.getElementById('loadingState').style.display = 'block';
+  document.getElementById('feedContainer').style.display = 'none';
+  allItems = [];
+
+  const promises = [];
+
+  // RSS feeds
+  RSS_SOURCES.forEach(src => {
+    if (settings.sources[src.id]) {
+      promises.push(fetchRSS(src));
+    }
+  });
+
+  // YouTube
+  if (settings.ytChannels.length > 0 && settings.ytApiKey) {
+    settings.ytChannels.forEach(ch => {
+      promises.push(fetchYouTube(ch));
+    });
+  } else if (settings.ytChannels.length > 0 && !settings.ytApiKey) {
+    // Add placeholder YouTube items
+    settings.ytChannels.forEach(ch => {
+      allItems.push({
+        type: 'video',
+        source: ch.name,
+        sourceId: 'yt',
+        title: `${ch.name} — Add YouTube API key to load videos`,
+        desc: 'Go to Settings → add your free YouTube API key to see the latest videos from this channel.',
+        url: `https://www.youtube.com/@${ch.name.replace(/\s/g,'')}`,
+        thumb: null,
+        date: new Date(),
+        isPlaceholder: true,
+      });
+    });
+  }
+
+  await Promise.allSettled(promises);
+
+  // Sort by date descending
+  allItems.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  hideRefreshBar();
+  renderFeed();
+}
+
+async function fetchRSS(src) {
+  // Try each proxy in order until one works
+  for (let i = 0; i < RSS_PROXIES.length; i++) {
+    try {
+      const proxyUrl = RSS_PROXIES[i](src.url);
+      const res = await fetch(proxyUrl);
+      if (!res.ok) continue;
+
+      // rss2json returns JSON directly
+      if (i === 0) {
+        const data = await res.json();
+        if (data.status !== 'ok' || !data.items) continue;
+        data.items.forEach(item => {
+          let img = item.enclosure?.link || item.thumbnail || null;
+          if (!img && item.description) {
+            const m = item.description.match(/<img[^>]+src=["']([^"']+)["']/i);
+            if (m) img = m[1];
+          }
+          allItems.push({
+            type: 'news', source: src.name, sourceId: src.id, emoji: src.emoji,
+            title: stripHtml(item.title),
+            desc: stripHtml(item.description || '').slice(0, 200),
+            url: item.link, img: img, date: new Date(item.pubDate),
+          });
+        });
+        return; // success
+      }
+
+      // allorigins wraps in {contents: "..."}
+      // corsproxy returns raw XML
+      let xmlText = '';
+      if (i === 1) {
+        const json = await res.json();
+        xmlText = json.contents || '';
+      } else {
+        xmlText = await res.text();
+      }
+      if (!xmlText) continue;
+
+      // Parse XML
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(xmlText, 'text/xml');
+      const items = xml.querySelectorAll('item');
+      if (!items.length) continue;
+
+      items.forEach(item => {
+        const title = item.querySelector('title')?.textContent || '';
+        const link = item.querySelector('link')?.textContent || '';
+        const pubDate = item.querySelector('pubDate')?.textContent || '';
+        const desc = item.querySelector('description')?.textContent || '';
+        const encUrl = item.querySelector('enclosure')?.getAttribute('url') || null;
+        let img = encUrl;
+        if (!img) {
+          const m = desc.match(/<img[^>]+src=["']([^"']+)["']/i);
+          if (m) img = m[1];
+        }
+        // media:thumbnail or media:content
+        const mediaNS = item.querySelector('thumbnail, content');
+        if (!img && mediaNS) img = mediaNS.getAttribute('url');
+
+        if (title && link) {
+          allItems.push({
+            type: 'news', source: src.name, sourceId: src.id, emoji: src.emoji,
+            title: stripHtml(title),
+            desc: stripHtml(desc).slice(0, 200),
+            url: link.trim(), img: img,
+            date: pubDate ? new Date(pubDate) : new Date(),
+          });
+        }
+      });
+      return; // success
+    } catch(e) {
+      console.warn(`RSS proxy ${i} failed for ${src.name}:`, e);
+    }
+  }
+  console.warn('All proxies failed for', src.name);
+}
+
+async function fetchYouTube(channel) {
+  try {
+    const key = settings.ytApiKey;
+    if (!key) return;
+    // Get uploads playlist
+    const chanRes = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${channel.id}&key=${key}`);
+    const chanData = await chanRes.json();
+    const uploadsId = chanData.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
+    if (!uploadsId) return;
+
+    const playRes = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${uploadsId}&maxResults=10&key=${key}`);
+    const playData = await playRes.json();
+    if (!playData.items) return;
+
+    playData.items.forEach(item => {
+      const s = item.snippet;
+      allItems.push({
+        type: 'video',
+        source: channel.name,
+        sourceId: 'yt',
+        title: s.title,
+        desc: s.description?.slice(0, 150) || '',
+        url: `https://www.youtube.com/watch?v=${s.resourceId?.videoId}`,
+        thumb: s.thumbnails?.high?.url || s.thumbnails?.medium?.url,
+        date: new Date(s.publishedAt),
+        videoId: s.resourceId?.videoId,
+        channel: channel.name,
+      });
+    });
+  } catch(e) {
+    console.warn('YouTube fetch failed for', channel.name, e);
+  }
+}
+
+// =====================
+// RENDER
+// =====================
+function renderFeed() {
+  document.getElementById('loadingState').style.display = 'none';
+  const container = document.getElementById('feedContainer');
+  container.style.display = 'block';
+
+  let items = allItems;
+
+  // Apply filter
+  if (currentFilter === 'video') items = items.filter(i => i.type === 'video');
+  else if (currentFilter === 'news') items = items.filter(i => i.type === 'news');
+  else if (['hh','hr','eh','en'].includes(currentFilter)) items = items.filter(i => i.sourceId === currentFilter);
+
+  if (items.length === 0) {
+    container.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon">🌾</div>
+        <div class="empty-title">Nothing here yet</div>
+        <div class="empty-sub">Enable some sources in Settings, or add a YouTube API key to load videos.</div>
+      </div>`;
+    return;
+  }
+
+  let html = '';
+  let lastDate = null;
+
+  items.forEach(item => {
+    const dateStr = formatDate(item.date);
+    if (dateStr !== lastDate) {
+      html += `<div class="date-sep">${dateStr}</div>`;
+      lastDate = dateStr;
+    }
+    html += item.type === 'video' ? renderVideo(item) : renderNews(item);
+  });
+
+  container.innerHTML = html;
+}
+
+function renderVideo(item) {
+  const thumb = item.thumb || `https://img.youtube.com/vi/${item.videoId || 'default'}/hqdefault.jpg`;
+  const thumbHtml = item.isPlaceholder
+    ? `<div style="width:100%;aspect-ratio:16/9;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:3rem;">📺</div>`
+    : `<div class="thumb-wrap">
+        <img src="${thumb}" alt="" loading="lazy" onerror="this.style.display='none'">
+        <div class="play-btn">▶</div>
+       </div>`;
+
+  return `<a href="${item.url}" target="_blank" rel="noopener" class="feed-item video">
+    ${thumbHtml}
+    <div class="card-body">
+      <div class="source-row">
+        <span class="source-badge yt">▶ YouTube</span>
+        <span class="time-ago">${timeAgo(item.date)}</span>
+      </div>
+      <div class="card-title">${esc(item.title)}</div>
+      <div class="card-channel">📺 ${esc(item.source)}</div>
+    </div>
+  </a>`;
+}
+
+function renderNews(item) {
+  const imgHtml = item.img
+    ? `<div class="card-image"><img src="${item.img}" alt="" loading="lazy" onerror="this.parentElement.className='card-image no-img'; this.parentElement.innerHTML='${item.emoji || '📰'}'"></div>`
+    : `<div class="card-image no-img">${item.emoji || '📰'}</div>`;
+
+  return `<a href="${item.url}" target="_blank" rel="noopener" class="feed-item news">
+    <div class="card-inner">
+      ${imgHtml}
+      <div class="card-body">
+        <div class="source-row">
+          <span class="source-badge news">${esc(item.source)}</span>
+          <span class="time-ago">${timeAgo(item.date)}</span>
+        </div>
+        <div class="card-title">${esc(item.title)}</div>
+        ${item.desc ? `<div class="card-desc">${esc(item.desc)}</div>` : ''}
+      </div>
+    </div>
+  </a>`;
+}
+
+// =====================
+// FILTER
+// =====================
+function setFilter(filter, el) {
+  currentFilter = filter;
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  renderFeed();
+}
+
+// =====================
+// SETTINGS
+// =====================
+function openSettings() {
+  document.getElementById('settingsOverlay').classList.add('open');
+}
+function closeSettings() {
+  saveSettings();
+  document.getElementById('settingsOverlay').classList.remove('open');
+  refreshAll();
+}
+function closeSettingsIfBg(e) {
+  if (e.target === document.getElementById('settingsOverlay')) closeSettings();
+}
+
+function addYtChannel() {
+  const name = document.getElementById('ytNameInput').value.trim();
+  const id = document.getElementById('ytIdInput').value.trim();
+  if (!name || !id) return;
+  settings.ytChannels.push({ name, id });
+  saveSettings();
+  document.getElementById('ytNameInput').value = '';
+  document.getElementById('ytIdInput').value = '';
+  renderYtChannelList();
+}
+
+function removeYtChannel(idx) {
+  settings.ytChannels.splice(idx, 1);
+  saveSettings();
+  renderYtChannelList();
+}
+
+function renderYtChannelList() {
+  const el = document.getElementById('ytChannelList');
+  if (!el) return;
+  if (settings.ytChannels.length === 0) {
+    el.innerHTML = '<div style="font-size:0.75rem;color:var(--ink4);padding:0.4rem 0;">No YouTube channels added yet.</div>';
+    return;
+  }
+  el.innerHTML = settings.ytChannels.map((ch, i) => `
+    <div class="yt-channel-row">
+      <div>
+        <div class="yt-channel-name">📺 ${esc(ch.name)}</div>
+        <div class="yt-channel-id">${esc(ch.id)}</div>
+      </div>
+      <button class="remove-btn" onclick="removeYtChannel(${i})">✕</button>
+    </div>`).join('');
+}
+
+// =====================
+// HELPERS
+// =====================
+function stripHtml(html) {
+  return html.replace(/<[^>]*>/g, '').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ').replace(/&#039;/g,"'").replace(/&quot;/g,'"').trim();
+}
+
+function esc(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function timeAgo(date) {
+  const s = Math.floor((new Date() - date) / 1000);
+  if (s < 60) return 'just now';
+  if (s < 3600) return Math.floor(s/60) + 'm ago';
+  if (s < 86400) return Math.floor(s/3600) + 'h ago';
+  if (s < 604800) return Math.floor(s/86400) + 'd ago';
+  return date.toLocaleDateString('en-GB', {day:'numeric', month:'short'});
+}
+
+function formatDate(date) {
+  const now = new Date();
+  const d = new Date(date);
+  const diff = Math.floor((now - d) / 86400000);
+  if (diff === 0) return 'Today';
+  if (diff === 1) return 'Yesterday';
+  if (diff < 7) return d.toLocaleDateString('en-GB', {weekday:'long'});
+  return d.toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'});
+}
+
+function showRefreshBar(msg) {
+  const bar = document.getElementById('refreshBar');
+  document.getElementById('refreshText').textContent = msg;
+  bar.classList.add('visible');
+}
+function hideRefreshBar() {
+  setTimeout(() => document.getElementById('refreshBar').classList.remove('visible'), 1500);
+}
+
+// Start
+init();
+</script>
+</body>
+</html>
